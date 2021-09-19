@@ -1,0 +1,17 @@
+Local $hull = _VectorOfPointCreate()
+Local $o_arr_hull = _cveOutputArrayFromVectorOfPoint($hull)
+_cveConvexHull($i_arr_dst_int32, $o_arr_hull)
+For $i = 0 To _VectorOfPointGetSize($dst_int32) - 1
+    _VectorOfPointGetItemPtr($dst_int32, $i, $tPointFPtr)
+    Local $dst_int32_i = DllStructCreate($tagCvPoint, $tPointFPtr.value)
+
+    _VectorOfPointGetItemPtr($hull, $i, $tPointFPtr)
+    Local $hull_i = DllStructCreate($tagCvPoint, $tPointFPtr.value)
+
+    If $hull_i.x <> $dst_int32_i.x Or $hull_i.y <> $dst_int32_i.y Then
+        ConsoleWrite("Concave contour" & @CRLF)
+        ExitLoop
+    EndIf
+Next
+_cveOutputArrayRelease($o_arr_hull)
+_VectorOfPointRelease($hull)
